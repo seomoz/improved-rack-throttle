@@ -33,12 +33,12 @@ module Rack; module Throttle
       begin
         cache_set(key, t1)
         allowed
-      rescue => e
+      rescue StandardError => e
+        allowed = true
         # If an error occurred while trying to update the timestamp stored
         # in the cache, we will fall back to allowing the request through.
         # This prevents the Rack application blowing up merely due to a
         # backend cache server (Memcached, Redis, etc.) being offline.
-        allowed = true
       end
     end
 

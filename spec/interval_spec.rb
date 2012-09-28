@@ -1,27 +1,33 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-def app
-  @target_app ||= example_target_app
-  @app ||= Rack::Throttle::Interval.new(@target_app, :min => 0.1)
-end
 
 describe Rack::Throttle::Interval do
   include Rack::Test::Methods
   
+  def app
+    @target_app ||= example_target_app
+    @app ||= Rack::Throttle::Interval.new(@target_app, :min => 0.1)
+  end
+
   it "should allow the request if the source has not been seen" do
     get "/foo"
     last_response.body.should show_allowed_response
   end
   
   it "should allow the request if the source has not been seen in the current interval" do
-    get "/foo"
-    sleep 0.2 # Should time travel this instead?
-    get "/foo"
+    Timecop.freeze do
+      get "/foo"
+      Timecop.freeze(1) do # Timecop.freeze won't do subsecond resolution
+        get "/foo"
+      end
+    end
     last_response.body.should show_allowed_response
   end
   
-  it "should not all the request if the source has been seen inside the current interval" do
-    2.times { get "/foo" }
+  it "should not allow the request if the source has been seen inside the current interval" do
+    Timecop.freeze do
+      2.times { get "/foo" }
+    end
     last_response.body.should show_throttled_response
   end
   
