@@ -12,8 +12,8 @@ Gem::Specification.new do |gem|
   gem.description        = 'Rack middleware for rate-limiting incoming HTTP requests.'
   gem.rubyforge_project  = 'datagraph'
 
-  gem.authors            = ['Arto Bendiken', 'Brendon Murphy']
-  gem.email              = 'arto.bendiken@gmail.com'
+  gem.authors            = ['Arto Bendiken', 'Brendon Murphy', 'Ben Somers']
+  gem.email              = 'ben@rafter.com'
 
   gem.platform           = Gem::Platform::RUBY
   gem.files              = %w(AUTHORS README UNLICENSE VERSION) + Dir.glob('lib/**/*.rb')
