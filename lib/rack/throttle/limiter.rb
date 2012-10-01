@@ -21,6 +21,7 @@ module Rack; module Throttle
     # @option options [String]  :key_prefix (nil)
     # @option options [Integer] :code       (403)
     # @option options [String]  :message    ("Rate Limit Exceeded")
+    # @option options [Regexp]  :url_rule   (nil)
     def initialize(app, options = {})
       @app, @options = app, options
     end
@@ -31,7 +32,23 @@ module Rack; module Throttle
     # @see    http://rack.rubyforge.org/doc/SPEC.html
     def call(env)
       request = Rack::Request.new(env)
-      allowed?(request) ? app.call(env) : rate_limit_exceeded
+      if restricted_url?(request.path) && !allowed?(request)
+        rate_limit_exceeded
+      else
+        app.call(env)
+      end
+    end
+
+    ##
+    # Returns `true` if no :url_rule regex or if the request path
+    # matches the :url regex, `false` otherwise.
+    #
+    # You can override this class, though that might be weird.
+    #
+    # @param  [String] path
+    # @return [Boolean]
+    def restricted_url?(path)
+      options[:url_rule].nil? || options[:url_rule].match(path)
     end
 
     ##
@@ -108,10 +125,10 @@ module Rack; module Throttle
     # @return [Object]
     def cache_get(key, default = nil)
       case
-        when cache.respond_to?(:[])
-          cache[key] || default
-        when cache.respond_to?(:get)
-          cache.get(key) || default
+      when cache.respond_to?(:[])
+        cache[key] || default
+      when cache.respond_to?(:get)
+        cache.get(key) || default
       end
     end
 
@@ -121,19 +138,19 @@ module Rack; module Throttle
     # @return [void]
     def cache_set(key, value)
       case
-        when cache.respond_to?(:[]=)
-          begin
-            cache[key] = value
-          rescue TypeError => e
-            # GDBM throws a "TypeError: can't convert Float into String"
-            # exception when trying to store a Float. On the other hand, we
-            # don't want to unnecessarily coerce the value to a String for
-            # any stores that do support other data types (e.g. in-memory
-            # hash objects). So, this is a compromise.
-            cache[key] = value.to_s
-          end
-        when cache.respond_to?(:set)
-          cache.set(key, value)
+      when cache.respond_to?(:[]=)
+        begin
+          cache[key] = value
+        rescue TypeError => e
+          # GDBM throws a "TypeError: can't convert Float into String"
+          # exception when trying to store a Float. On the other hand, we
+          # don't want to unnecessarily coerce the value to a String for
+          # any stores that do support other data types (e.g. in-memory
+          # hash objects). So, this is a compromise.
+          cache[key] = value.to_s
+        end
+      when cache.respond_to?(:set)
+        cache.set(key, value)
       end
     end
 
@@ -142,13 +159,10 @@ module Rack; module Throttle
     # @return [String]
     def cache_key(request)
       id = client_identifier(request)
-      case
-        when options.has_key?(:key)
-          options[:key].call(request)
-        when options.has_key?(:key_prefix)
-          [options[:key_prefix], id].join(':')
-        else id
-      end
+      id = options[:key].call(request) if options.has_key?(:key)
+      id = [options[:url_rule].source, id].join(":") if options.has_key?(:url_rule)
+      id = [options[:key_prefix], id].join(':') if options.has_key?(:key_prefix)
+      id
     end
 
     ##
@@ -163,10 +177,10 @@ module Rack; module Throttle
     # @return [Float]
     def request_start_time(request)
       case
-        when request.env.has_key?('HTTP_X_REQUEST_START')
-          request.env['HTTP_X_REQUEST_START'].to_f / 1000
-        else
-          Time.now.to_f
+      when request.env.has_key?('HTTP_X_REQUEST_START')
+        request.env['HTTP_X_REQUEST_START'].to_f / 1000
+      else
+        Time.now.to_f
       end
     end
 
