@@ -10,8 +10,7 @@ module Rack; module Throttle
   #   end
   #
   class Limiter
-    attr_reader :app
-    attr_reader :options
+    attr_reader :app, :options, :matchers
 
     ##
     # @param  [#call]                       app
@@ -23,7 +22,12 @@ module Rack; module Throttle
     # @option options [String]  :message    ("Rate Limit Exceeded")
     # @option options [Regexp]  :url_rule   (nil)
     def initialize(app, options = {})
-      @app, @options = app, options
+      rules = options.delete(:rules) || {}
+      @app, @options, @matchers = app, options, []
+      @matchers += Array(rules[:ip]).map { |rule| IpMatcher.new(rule) } if rules[:ip]
+      @matchers += Array(rules[:url]).map { |rule| UrlMatcher.new(rule) } if rules[:url]
+      @matchers += Array(rules[:user_agent]).map { |rule| UserAgentMatcher.new(rule) } if rules[:user_agent]
+      @matchers += Array(rules[:method]).map { |rule| MethodMatcher.new(rule) } if rules[:method]
     end
 
     ##
@@ -32,7 +36,9 @@ module Rack; module Throttle
     # @see    http://rack.rubyforge.org/doc/SPEC.html
     def call(env)
       request = Rack::Request.new(env)
-      if restricted_url?(request.path) && !allowed?(request)
+      match_results = @matchers.map { |m| m.match?(request) }.uniq
+      applicable = @matchers.empty? || match_results == [true]
+      if applicable and !allowed?(request)
         rate_limit_exceeded
       else
         app.call(env)
@@ -160,8 +166,11 @@ module Rack; module Throttle
     def cache_key(request)
       id = client_identifier(request)
       id = options[:key].call(request) if options.has_key?(:key)
-      id = [options[:url_rule].source, id].join(":") if options.has_key?(:url_rule)
       id = [options[:key_prefix], id].join(':') if options.has_key?(:key_prefix)
+      @matchers.each do |matcher|
+        id += ":#{matcher.identifier}"
+      end
+
       id
     end
 
@@ -169,7 +178,7 @@ module Rack; module Throttle
     # @param  [Rack::Request] request
     # @return [String]
     def client_identifier(request)
-      request.ip.to_s + ":" + request.user_agent.to_s
+      request.ip.to_s
     end
 
     ##
