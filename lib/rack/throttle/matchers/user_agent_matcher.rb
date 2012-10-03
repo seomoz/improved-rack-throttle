@@ -1,13 +1,13 @@
 module Rack; module Throttle
   ###
   # IpMatchers take RegExp objects and compare the request ip against them
-  class IpMatcher < Matcher
+  class UserAgentMatcher < Matcher
     def match?(request)
-      !!(@rule =~ request.ip)
+      !!(@rule =~ request.user_agent)
     end
 
     def identifier
-      "ip" + @rule.inspect
+      "ua-" + @rule.inspect
     end
   end
 

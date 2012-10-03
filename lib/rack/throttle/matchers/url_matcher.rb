@@ -7,7 +7,7 @@ module Rack; module Throttle
     end
 
     def identifier
-      "url" + @rule.inspect
+      "url-" + @rule.inspect
     end
   end
 
