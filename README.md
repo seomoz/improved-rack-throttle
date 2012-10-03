@@ -230,3 +230,8 @@ information, see <http://unlicense.org/> or the accompanying UNLICENSE file.
 [redis]:           http://rubygems.org/gems/redis
 [Heroku]:          http://heroku.com/
 [Heroku memcache]: http://docs.heroku.com/memcache
+
+Support
+-------
+
+Recent work on improved-rack-throttle has been funded by Rafter, Inc.
