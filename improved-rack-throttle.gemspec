@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "improved-rack-throttle"
-  s.version = "0.5.0"
+  s.version = "0.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Somers", "Arto Bendiken", "Brendon Murphy"]
@@ -13,10 +13,12 @@ Gem::Specification.new do |s|
   s.description = "Rack middleware for rate-limiting incoming HTTP requests."
   s.email = "somers.ben@gmail.com"
   s.extra_rdoc_files = [
-    "UNLICENSE",
     "README.md"
   ]
   s.files = [
+    ".document",
+    "Gemfile",
+    "Gemfile.lock",
     "README.md",
     "Rakefile",
     "UNLICENSE",
@@ -27,15 +29,16 @@ Gem::Specification.new do |s|
     "etc/memcache.ru",
     "etc/memcached.ru",
     "etc/redis.ru",
+    "improved-rack-throttle.gemspec",
     "lib/rack/throttle.rb",
     "lib/rack/throttle/daily.rb",
     "lib/rack/throttle/hourly.rb",
     "lib/rack/throttle/interval.rb",
     "lib/rack/throttle/limiter.rb",
     "lib/rack/throttle/matcher.rb",
-    "lib/rack/throttle/matchers/ip_matcher.rb",
     "lib/rack/throttle/matchers/method_matcher.rb",
     "lib/rack/throttle/matchers/url_matcher.rb",
+    "lib/rack/throttle/matchers/user_agent_matcher.rb",
     "lib/rack/throttle/time_window.rb",
     "lib/rack/throttle/version.rb",
     "spec/daily_spec.rb",
@@ -44,7 +47,8 @@ Gem::Specification.new do |s|
     "spec/limiter_spec.rb",
     "spec/method_matcher_spec.rb",
     "spec/spec_helper.rb",
-    "spec/url_matcher_spec.rb"
+    "spec/url_matcher_spec.rb",
+    "spec/user_agent_matcher_spec.rb"
   ]
   s.homepage = "http://github.com/bensomers/improved-rack-throttle"
   s.licenses = ["Public Domain"]
