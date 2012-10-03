@@ -15,10 +15,13 @@ Features
   subsequent HTTP requests from a particular client, as well as by defining
   a maximum number of allowed HTTP requests per a given time period (hourly
   or daily).
+* Scopes throttling rules by request path, http method, or user_agent
+  for applications that need a variety of rules
 * Compatible with any Rack application and any Rack-based framework.
 * Stores rate-limiting counters in any key/value store implementation that
   responds to `#[]`/`#[]=` (like Ruby's hashes) or to `#get`/`#set` (like
-  memcached or Redis).
+  memcached or Redis). This makes it easy to use global counters across
+  multiple web servers.
 * Compatible with the [gdbm][] binding included in Ruby's standard library.
 * Compatible with the [memcached][], [memcache-client][], [memcache][] and
   [redis][] gems.
@@ -92,6 +95,10 @@ Examples
     
     use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
 
+### Scoping the rate-limit to a specific path and method
+
+    use Rack::Throttle::Interval, :rules => {:url => /api/, :method => :post}
+
 Throttling Strategies
 ---------------------
 
@@ -114,6 +121,17 @@ And, of course, should your application-specific requirements be
 significantly more complex than what we've provided for, you can also define
 entirely new kinds of throttling strategies by subclassing the
 `Rack::Throttle::Limiter` base class directly.
+
+Scoping Rules
+-------------
+Rack::Throttle ships with a Rack::Throttle::Matcher base class, and three
+implementations of it. Rack::Throttle::UrlMatcher and
+Rack::Throttle::UserAgentMatcher allow you to pass in regular expressions
+for request path and user agent, while Rack::Throttle::MethodMatcher
+will filter by request method when passed a Symbol :get, :post, :put, or
+:delete. These rules are additive, so you can throttle just POST
+requests to your '/login' page, for example.
+
 
 HTTP Client Identification
 --------------------------
@@ -158,6 +176,7 @@ status code by passing in a `:code => 503` option when constructing a
 
 Documentation
 -------------
+OUT OF DATE
 
 <http://datagraph.rubyforge.org/rack-throttle/>
 
@@ -177,23 +196,23 @@ Installation
 The recommended installation method is via [RubyGems](http://rubygems.org/).
 To install the latest official release of the gem, do:
 
-    % [sudo] gem install rack-throttle
+    % [sudo] gem install improved-rack-throttle
 
 Download
 --------
 
 To get a local working copy of the development repository, do:
 
-    % git clone git://github.com/datagraph/rack-throttle.git
+    % git clone git://github.com/bensomers/improved-rack-throttle.git
 
 Alternatively, you can download the latest development version as a tarball
 as follows:
 
-    % wget http://github.com/datagraph/rack-throttle/tarball/master
+    % wget http://github.com/bensomers/improved-rack-throttle/tarball/master
 
 Authors
 -------
-
+* [Ben Somers](mailto:somers.ben@gmail.com) - <http://www.somanyrobots.com>
 * [Arto Bendiken](mailto:arto.bendiken@gmail.com) - <http://ar.to/>
 * [Brendon Murphy](mailto:disposable.20.xternal@spamourmet.com>) - <http://www.techfreak.net/>
 
