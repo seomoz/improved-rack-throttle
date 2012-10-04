@@ -20,7 +20,6 @@ module Rack; module Throttle
     # @option options [String]  :key_prefix (nil)
     # @option options [Integer] :code       (403)
     # @option options [String]  :message    ("Rate Limit Exceeded")
-    # @option options [Regexp]  :url_rule   (nil)
     def initialize(app, options = {})
       rules = options.delete(:rules) || {}
       @app, @options, @matchers = app, options, []
