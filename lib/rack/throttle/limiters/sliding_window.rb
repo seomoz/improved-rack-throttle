@@ -29,9 +29,10 @@ module Rack; module Throttle
       key = cache_key(request)
       bucket = cache_get(key) rescue nil
       bucket ||= LeakyBucket.new(options[:burst], options[:average])
+      bucket.maximum, bucket.outflow = options[:burst], options[:average]
       bucket.leak! 
       bucket.increment!
-      allowed = !bucket.overfull?
+      allowed = !bucket.full?
       begin
         cache_set(key, bucket)
         allowed
@@ -45,7 +46,8 @@ module Rack; module Throttle
     end
 
     class LeakyBucket
-      attr_reader :count, :maximum, :outflow, :last_touched
+      attr_accessor :maximum, :outflow
+      attr_reader :count, :last_touched
 
       def initialize(maximum, outflow)
         @maximum, @outflow = maximum, outflow
@@ -65,10 +67,11 @@ module Rack; module Throttle
       def increment!
         @count = 0 if count < 0
         @count += 1
+        @count = maximum if count > maximum
       end
 
-      def overfull?
-        count > maximum
+      def full?
+        count == maximum
       end
     end
 
