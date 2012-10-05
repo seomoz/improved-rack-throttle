@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rack", "~> 1.0.0"
+gem "rack", ">= 1.0.0"
 
 group :development, :test do
   gem 'timecop',   '~> 0.5.2'
