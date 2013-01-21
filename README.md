@@ -2,6 +2,7 @@ HTTP Request Rate Limiter for Rack Applications
 ===============================================
 
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/bensomers/improved-rack-throttle)
+[![Dependency Status](https://gemnasium.com/bensomers/improved-rack-throttle.png)](https://gemnasium.com/bensomers/improved-rack-throttle)
 
 This is [Rack][] middleware that provides logic for rate-limiting incoming
 HTTP requests to Rack applications. You can use `Rack::Throttle` with any
