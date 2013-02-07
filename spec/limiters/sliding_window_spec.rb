@@ -9,8 +9,8 @@ describe Rack::Throttle::SlidingWindow do
   end
 
   before(:each) do
-    @time = Time.now
     Timecop.freeze
+    @time = Time.now
   end
 
   after(:each) do
