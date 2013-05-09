@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "improved-rack-throttle"
-  s.version = "0.7.0"
+  s.version = "0.7.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Somers", "Arto Bendiken", "Brendon Murphy"]
-  s.date = "2012-10-05"
+  s.date = "2013-05-09"
   s.description = "Rack middleware for rate-limiting incoming HTTP requests."
   s.email = "somers.ben@gmail.com"
   s.extra_rdoc_files = [
@@ -55,7 +55,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/bensomers/improved-rack-throttle"
   s.licenses = ["Public Domain"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.17"
+  s.rubygems_version = "1.8.25"
   s.summary = "HTTP request rate limiter for Rack applications."
 
   if s.respond_to? :specification_version then
@@ -67,6 +67,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rack-test>, ["~> 0.6.2"])
       s.add_development_dependency(%q<rspec>, ["~> 2.11.0"])
       s.add_development_dependency(%q<yard>, [">= 0.5.5"])
+      s.add_development_dependency(%q<redcarpet>, [">= 0"])
       s.add_development_dependency(%q<rake>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
@@ -75,6 +76,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rack-test>, ["~> 0.6.2"])
       s.add_dependency(%q<rspec>, ["~> 2.11.0"])
       s.add_dependency(%q<yard>, [">= 0.5.5"])
+      s.add_dependency(%q<redcarpet>, [">= 0"])
       s.add_dependency(%q<rake>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
     end
@@ -84,6 +86,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rack-test>, ["~> 0.6.2"])
     s.add_dependency(%q<rspec>, ["~> 2.11.0"])
     s.add_dependency(%q<yard>, [">= 0.5.5"])
+    s.add_dependency(%q<redcarpet>, [">= 0"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
   end
