@@ -188,8 +188,6 @@ status code by passing in a `:code => 503` option when constructing a
 
 Documentation
 -------------
-UNDER DEVELOPMENT
-
 <http://rubydoc.info/gems/improved-rack-throttle>
 
 * {Rack::Throttle}
