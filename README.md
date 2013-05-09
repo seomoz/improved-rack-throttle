@@ -4,12 +4,12 @@ HTTP Request Rate Limiter for Rack Applications
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/bensomers/improved-rack-throttle)
 [![Dependency Status](https://gemnasium.com/bensomers/improved-rack-throttle.png)](https://gemnasium.com/bensomers/improved-rack-throttle)
 
-This is [Rack][] middleware that provides logic for rate-limiting incoming
+This is a [Rack][] middleware that provides logic for rate-limiting incoming
 HTTP requests to Rack applications. You can use `Rack::Throttle` with any
 Ruby web framework based on Rack, including with Ruby on Rails 3.0 and with
 Sinatra.
 
-* <http://github.com/datagraph/rack-throttle>
+* <http://github.com/bensomers/improved-rack-throttle>
 
 Features
 --------
@@ -29,7 +29,6 @@ Features
 * Compatible with the [memcached][], [memcache-client][], [memcache][] and
   [redis][] gems.
 * Compatible with [Heroku][]'s [memcached add-on][Heroku memcache]
-  (currently available as a free beta service).
 
 Examples
 --------
@@ -74,6 +73,10 @@ Examples
 
     use Rack::Throttle::Daily,    :max => 1000
 
+### Allowing 1 request per second, with bursts of up to 5 requests
+
+    use Rack::Throttle::SlidingWindow, :average => 1, :burst => 5
+
 ### Combining various throttling constraints into one overall policy
 
     use Rack::Throttle::Daily,    :max => 1000  # requests
@@ -105,7 +108,7 @@ Examples
 Throttling Strategies
 ---------------------
 
-`Rack::Throttle` supports three built-in throttling strategies:
+`Rack::Throttle` supports four built-in throttling strategies:
 
 * `Rack::Throttle::Interval`: Throttles the application by enforcing a
   minimum interval (by default, 1 second) between subsequent HTTP requests.
@@ -117,6 +120,12 @@ Throttling Strategies
   maximum number of allowed HTTP requests per day (by default, 86,400
   requests per 24 hours, which works out to an average of 1 request per
   second).
+* `Rack::Throttle::SlidingWindow`: Throttles the application by defining
+  an average request rate, and a burst allowance that clients can hit
+  (as long as they stay within the average). By default, this is 1
+  request per second, with bursts of up to 5 requests at a time. Users
+  who exceed the average and who have used up their burst will have all
+  of their requests denied until they comply with the policy.
 
 You can fully customize the implementation details of any of these strategies
 by simply subclassing one of the aforementioned default implementations.
@@ -128,7 +137,7 @@ entirely new kinds of throttling strategies by subclassing the
 Scoping Rules
 -------------
 Rack::Throttle ships with a Rack::Throttle::Matcher base class, and three
-implementations of it. Rack::Throttle::UrlMatcher and
+implementations. Rack::Throttle::UrlMatcher and
 Rack::Throttle::UserAgentMatcher allow you to pass in regular expressions
 for request path and user agent, while Rack::Throttle::MethodMatcher
 will filter by request method when passed a Symbol :get, :post, :put, or
@@ -145,7 +154,7 @@ keyed to unique HTTP clients.
 By default, HTTP clients are uniquely identified by their IP address as
 returned by `Rack::Request#ip`. If you wish to instead use a more granular,
 application-specific identifier such as a session key or a user account
-name, you need only subclass a throttling strategy implementation and
+name, you can subclass a throttling strategy implementation and
 override the `#client_identifier` method.
 
 HTTP Response Codes and Headers
@@ -179,14 +188,19 @@ status code by passing in a `:code => 503` option when constructing a
 
 Documentation
 -------------
-OUT OF DATE
+UNDER DEVELOPMENT
 
-<http://datagraph.rubyforge.org/rack-throttle/>
+<http://rubydoc.info/gems/improved-rack-throttle>
 
 * {Rack::Throttle}
   * {Rack::Throttle::Interval}
   * {Rack::Throttle::Daily}
   * {Rack::Throttle::Hourly}
+  * {Rack::Throttle::SlidingWindow}
+  * {Rack::Throttle::Matcher}
+  * {Rack::Throttle::MethodMatcher}
+  * {Rack::Throttle::UrlMatcher}
+  * {Rack::Throttle::UserAgentMatcher}
 
 Dependencies
 ------------
