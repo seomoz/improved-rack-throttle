@@ -1,9 +1,9 @@
 module Rack; module Throttle
   ###
-  # This is the base class for matcher implementations
-  # Implements IP, user agent, url, and request method based matching
-  # e.g. implement throttling rules that discriminate by ip, user agent, url, request method,
-  # or any combination thereof
+  # This is the base class for matcher implementations.
+  # Implementations are provided for User Agent, URL, and request
+  # method. Subclass Matcher if you want to provide a custom
+  # implementation.
   class Matcher
     attr_reader :rule
 
@@ -11,11 +11,19 @@ module Rack; module Throttle
       @rule = rule
     end
 
-    # MUST return true or false
+    # Must be implemented in a subclass.
+    # MUST return true or false.
+    # @return [Boolean]
+    # @abstract
     def match?
       true
     end
 
+    # Must be implemented in a subclass.
+    # Used to produce a unique key in our cache store.
+    # Typically of the form "xx-"
+    # @return [String]
+    # @abstract
     def identifier
       ""
     end

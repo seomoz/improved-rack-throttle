@@ -18,9 +18,8 @@ module Rack; module Throttle
     end
 
     ##
-    # Returns `true` if sufficient time (equal to or more than
-    # {#minimum_interval}) has passed since the last request and the given
-    # present `request`.
+    # Returns `true` if the request conforms to the 
+    # specified :average and :burst rules
     #
     # @param  [Rack::Request] request
     # @return [Boolean]
@@ -45,10 +44,18 @@ module Rack; module Throttle
       end
     end
 
+    ###
+    # LeakyBucket is an internal class used to implement the
+    # SlidingWindow limiter strategy. It is a (slightly tweaked)
+    # implementation of the {http://en.wikipedia.org/wiki/Leaky_bucket
+    # Leaky Bucket Algorithm}.
     class LeakyBucket
       attr_accessor :maximum, :outflow
       attr_reader :count, :last_touched
 
+      ##
+      # @param [Integer] maximum
+      # @param [Float] outflow
       def initialize(maximum, outflow)
         @maximum, @outflow = maximum, outflow
         @count, @last_touched = 0, Time.now
