@@ -7,7 +7,7 @@ group :development, :test do
   gem 'rack-test', '~> 0.6.2'
   gem 'rspec',     '~> 2.11.0'
   gem 'yard' ,     '>= 0.5.5'
-  gem "simplecov"
+  gem "simplecov", :require => false
   gem 'redcarpet'
   gem 'rake'
   gem 'jeweler'
