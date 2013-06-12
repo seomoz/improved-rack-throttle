@@ -3,6 +3,11 @@ require "rack/test"
 require "rack/throttle"
 require "timecop"
 
+unless RUBY_VERSION.match(/1\.8/)
+  require 'simplecov'
+  SimpleCov.start
+end
+
 def example_target_app
   @target_app = double("Example Rack App")
   @target_app.stub(:call).with(any_args()).and_return([200, {}, "Example App Body"])
