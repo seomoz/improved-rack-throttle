@@ -44,6 +44,15 @@ module Rack; module Throttle
       end
     end
 
+    ##
+    # Returns the number of seconds before the client is allowed to retry an
+    # HTTP request.
+    #
+    # @return [Float]
+    def retry_after
+      @retry_after ||= (1.0 / options[:average].to_f)
+    end
+
     ###
     # LeakyBucket is an internal class used to implement the
     # SlidingWindow limiter strategy. It is a (slightly tweaked)
