@@ -9,20 +9,20 @@ describe Rack::Throttle::UrlMatcher do
   end
 
   it "should not bother checking if the path doesn't match the rule" do
-    app.should_not_receive(:allowed?)
+    expect(app).not_to receive(:allowed?)
     get "/bar"
-    last_response.body.should show_allowed_response
+    expect(last_response.body).to show_allowed_response
   end
-  
+
   it "should check if the path matches the rule" do
-    app.should_receive(:allowed?).and_return(false)
+    expect(app).to receive(:allowed?).and_return(false)
     get "/foo"
-    last_response.body.should show_throttled_response
+    expect(last_response.body).to show_throttled_response
   end
 
   it "should append the rule to the cache key" do
     get "/foo"
-    app.send(:cache_key, last_request).should == "127.0.0.1:url-/foo/"
+    expect(app.send(:cache_key, last_request)).to eq "127.0.0.1:url-/foo/"
   end
 end
 

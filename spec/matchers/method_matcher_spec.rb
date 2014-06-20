@@ -9,19 +9,19 @@ describe Rack::Throttle::MethodMatcher do
   end
 
   it "should not bother checking if the path doesn't match the rule" do
-    app.should_not_receive(:allowed?)
+    expect(app).not_to receive(:allowed?)
     get "/foo"
-    last_response.body.should show_allowed_response
+    expect(last_response.body).to show_allowed_response
   end
-  
+
   it "should check if the path matches the rule" do
-    app.should_receive(:allowed?).and_return(false)
+    expect(app).to receive(:allowed?).and_return(false)
     post "/foo"
-    last_response.body.should show_throttled_response
+    expect(last_response.body).to show_throttled_response
   end
 
   it "should append the rule to the cache key" do
     post "/foo"
-    app.send(:cache_key, last_request).should == "127.0.0.1:meth-post"
+    expect(app.send(:cache_key, last_request)).to eq "127.0.0.1:meth-post"
   end
 end

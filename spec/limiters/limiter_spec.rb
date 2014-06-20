@@ -7,44 +7,44 @@ describe Rack::Throttle::Limiter do
     @target_app ||= example_target_app
     @app ||= Rack::Throttle::Limiter.new(@target_app)
   end
-  
+
   describe "basic calling" do
     it "should return the example app" do
       get "/foo"
-      last_response.body.should show_allowed_response
+      expect(last_response.body).to show_allowed_response
     end
-  
+
     it "should call the application if allowed" do
-      app.should_receive(:allowed?).and_return(true)
+      expect(app).to receive(:allowed?).and_return(true)
       get "/foo"
-      last_response.body.should show_allowed_response
+      expect(last_response.body).to show_allowed_response
     end
-  
+
     it "should give a rate limit exceeded message if not allowed" do
-      app.should_receive(:allowed?).and_return(false)
+      expect(app).to receive(:allowed?).and_return(false)
       get "/foo"
-      last_response.body.should show_throttled_response
+      expect(last_response.body).to show_throttled_response
     end
   end
-  
+
   describe "allowed?" do
     it "should return true if whitelisted" do
-      app.should_receive(:whitelisted?).and_return(true)
+      expect(app).to receive(:whitelisted?).and_return(true)
       get "/foo"
-      last_response.body.should show_allowed_response
+      expect(last_response.body).to show_allowed_response
     end
-    
+
     it "should return false if blacklisted" do
-      app.should_receive(:blacklisted?).and_return(true)
+      expect(app).to receive(:blacklisted?).and_return(true)
       get "/foo"
-      last_response.body.should show_throttled_response
+      expect(last_response.body).to show_throttled_response
     end
-    
+
     it "should return true if not whitelisted or blacklisted" do
-      app.should_receive(:whitelisted?).and_return(false)
-      app.should_receive(:blacklisted?).and_return(false)
+      expect(app).to receive(:whitelisted?).and_return(false)
+      expect(app).to receive(:blacklisted?).and_return(false)
       get "/foo"
-      last_response.body.should show_allowed_response
+      expect(last_response.body).to show_allowed_response
     end
   end
 
