@@ -2,8 +2,8 @@ module Rack; module Throttle
   ##
   # This rate limiter strategy throttles the application with
   # a sliding window (implemented as a leaky bucket). It operates
-  # on second-level resolution. It takes :burst and :average 
-  # options, which correspond to the maximum size of a traffic 
+  # on second-level resolution. It takes :burst and :average
+  # options, which correspond to the maximum size of a traffic
   # burst, and the maximum allowed average traffic level.
   class SlidingWindow < Limiter
     ##
@@ -18,7 +18,7 @@ module Rack; module Throttle
     end
 
     ##
-    # Returns `true` if the request conforms to the 
+    # Returns `true` if the request conforms to the
     # specified :average and :burst rules
     #
     # @param  [Rack::Request] request
@@ -29,7 +29,7 @@ module Rack; module Throttle
       bucket = cache_get(key) rescue nil
       bucket ||= LeakyBucket.new(options[:burst], options[:average])
       bucket.maximum, bucket.outflow = options[:burst], options[:average]
-      bucket.leak! 
+      bucket.leak!
       bucket.increment!
       allowed = !bucket.full?
       begin
@@ -67,7 +67,7 @@ module Rack; module Throttle
         loss = (outflow * time).to_f
         if loss > 0
           @count -= loss
-          @last_touched = t 
+          @last_touched = t
         end
       end
 
