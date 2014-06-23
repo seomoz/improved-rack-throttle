@@ -38,7 +38,7 @@ Examples
 
     # config/application.rb
     require 'rack/throttle'
-    
+
     class Application < Rails::Application
       config.middleware.use Rack::Throttle::Interval
     end
@@ -48,18 +48,18 @@ Examples
     #!/usr/bin/env ruby -rubygems
     require 'sinatra'
     require 'rack/throttle'
-    
+
     use Rack::Throttle::Interval
-    
+
     get('/hello') { "Hello, world!\n" }
 
 ### Adding throttling to a Rackup application
 
     #!/usr/bin/env rackup
     require 'rack/throttle'
-    
+
     use Rack::Throttle::Interval
-    
+
     run lambda { |env| [200, {'Content-Type' => 'text/plain'}, "Hello, world!\n"] }
 
 ### Enforcing a minimum 3-second interval between requests
@@ -87,19 +87,19 @@ Examples
 ### Storing the rate-limiting counters in a GDBM database
 
     require 'gdbm'
-    
+
     use Rack::Throttle::Interval, :cache => GDBM.new('tmp/throttle.db')
 
 ### Storing the rate-limiting counters on a Memcached server
 
     require 'memcached'
-    
+
     use Rack::Throttle::Interval, :cache => Memcached.new, :key_prefix => :throttle
 
 ### Storing the rate-limiting counters on a Redis server
 
     require 'redis'
-    
+
     use Rack::Throttle::Interval, :cache => Redis.new, :key_prefix => :throttle
 
 ### Scoping the rate-limit to a specific path and method
@@ -228,7 +228,7 @@ as follows:
 
 Authors
 -------
-* [Ben Somers](mailto:somers.ben@gmail.com) - <http://www.somanyrobots.com>
+* [Ben Somers](mailto:somers.ben@gmail.com) - <http://www.github.com/bensomers>
 * [Arto Bendiken](mailto:arto.bendiken@gmail.com) - <http://ar.to/>
 * [Brendon Murphy](mailto:disposable.20.xternal@spamourmet.com>) - <http://www.techfreak.net/>
 
