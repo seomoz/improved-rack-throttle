@@ -197,7 +197,8 @@ module Rack; module Throttle
     #
     # @return [Array(Integer, Hash, #each)]
     def rate_limit_exceeded
-      headers = respond_to?(:retry_after) ? {'Retry-After' => retry_after.to_f.ceil.to_s} : {}
+      return_retry_after = options[:return_retry_after] || true
+      headers = (respond_to?(:retry_after) && return_retry_after) ? {'Retry-After' => retry_after.to_f.ceil.to_s} : {}
       http_error(options[:code] || 403, options[:message] || 'Rate Limit Exceeded', headers)
     end
 
