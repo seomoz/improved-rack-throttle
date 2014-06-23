@@ -228,7 +228,7 @@ as follows:
 
 Authors
 -------
-* [Ben Somers](mailto:somers.ben@gmail.com) - <http://www.somanyrobots.com>
+* [Ben Somers](mailto:somers.ben@gmail.com) - <http://www.github.com/bensomers>
 * [Arto Bendiken](mailto:arto.bendiken@gmail.com) - <http://ar.to/>
 * [Brendon Murphy](mailto:disposable.20.xternal@spamourmet.com>) - <http://www.techfreak.net/>
 
