@@ -14,7 +14,7 @@ module Rack; module Throttle
     # @param [Rack::Request] request
     # @return [Boolean]
     def match?(request)
-      username = extract_username(request.instance_variable_get(:@env)['HTTP_AUTHORIZATION'])
+      username = extract_username(request.env['HTTP_AUTHORIZATION'])
       !!(@rule =~ username)
     end
 
