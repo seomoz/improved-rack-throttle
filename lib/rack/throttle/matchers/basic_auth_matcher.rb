@@ -1,4 +1,5 @@
 require 'rack/throttle/matchers/matcher'
+require 'base64'
 
 module Rack; module Throttle
   ###
@@ -13,8 +14,8 @@ module Rack; module Throttle
     # @param [Rack::Request] request
     # @return [Boolean]
     def match?(request)
-      debugger
-      !!(@rule =~ request.path)
+      username = extract_username(request.instance_variable_get(:@env)['HTTP_AUTHORIZATION'])
+      !!(@rule =~ username)
     end
 
     ###
@@ -22,8 +23,17 @@ module Rack; module Throttle
     def identifier
       "basic_auth-" + @rule.inspect
     end
+
+    ###
+    # @param [String] Contents of HTTP_AUTHORIZATION header, e.g. 'Basic dXNlcjpwYXNzd29yZA==\n'
+    # @return [String]
+    def extract_username(string)
+      return nil if string.nil? || string.empty?
+      basic, b64 = string.split(' ')
+      Base64.decode64(b64).split(':').first if basic =~ /basic/i
+    end
+
   end
-  puts "defining BasicAuthMatcher"
 
 end; end
 
